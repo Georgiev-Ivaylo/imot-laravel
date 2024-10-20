@@ -37,7 +37,7 @@ class EstatePolicy
      */
     public function update(User $user, Estate $estate): bool
     {
-        //
+        return $user->id === $estate->user_id;
     }
 
     /**
@@ -45,7 +45,7 @@ class EstatePolicy
      */
     public function delete(User $user, Estate $estate): bool
     {
-        //
+        return $user->id !== $estate->user_id;
     }
 
     /**
@@ -61,6 +61,6 @@ class EstatePolicy
      */
     public function forceDelete(User $user, Estate $estate): bool
     {
-        //
+        return $user->id !== $estate->user_id;
     }
 }

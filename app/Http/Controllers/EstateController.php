@@ -6,7 +6,9 @@ use App\Http\Requests\StoreEstateRequest;
 use App\Http\Requests\UpdateEstateRequest;
 use App\Http\Resources\EstatesResource;
 use App\Models\Estate;
+use App\Utils\ApiResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 
 class EstateController extends Controller
@@ -16,7 +18,14 @@ class EstateController extends Controller
      */
     public function index(Request $request)
     {
+        sleep(3);
+        $user = $request->user();
+
         $estates = Estate::query();
+        if ($user) {
+            $estates->where('user_id', $user->id);
+        }
+
         if ($request->input('order_by')) {
             $orderRules = explode(',', $request->input('order_by'));
             foreach ($orderRules as $orderRule) {
@@ -28,7 +37,11 @@ class EstateController extends Controller
             }
         }
         if ($request->input('query')) {
-            $estates->where('description', 'ILIKE', "%{$request->input('query')}%");
+            $estates->where(
+                'description',
+                'ILIKE',
+                "%{$request->input('query')}%"
+            );
         }
 
         if ($request->input('get_pages')) {
@@ -51,7 +64,8 @@ class EstateController extends Controller
     public function show(Request $request, $estateId)
     {
         // dd(Estate::with(['author'])->findOrFail($estateId));
-        return new EstatesResource(Estate::with(['author'])->findOrFail($estateId));
+        return new EstatesResource(Estate::with(['author'])
+            ->findOrFail($estateId));
     }
 
     /**
@@ -67,6 +81,10 @@ class EstateController extends Controller
      */
     public function destroy(Estate $estate)
     {
-        //
+        Gate::authorize('forceDelete', $estate);
+
+        $estate->delete();
+
+        return ApiResponse::success([]);
     }
 }
