@@ -20,7 +20,7 @@ class EstateFactory extends Factory
     {
         $rooms = fake()->numberBetween(1, 10);
         $estate = [
-            'user_id' => fake()->numberBetween(1, 10),
+            'user_id' => fake()->numberBetween(1, 30),
             'price' => fake()->numberBetween(10000, 1000000),
             'currency_code' => fake()->randomElement(['BGN', 'EUR', 'USD']),
             'type' => fake()->randomElement(['land', 'house', 'floor', 'apartment']),
@@ -32,7 +32,7 @@ class EstateFactory extends Factory
                 ->toDateTimeString(),
             'rooms' => $rooms,
             'bathrooms' => fake()->numberBetween(1, $rooms),
-            'land_size' => fake()->numberBetween(100, 65000) - Estate::UNSIGNED_SMALLINT,
+            'land_size' => fake()->numberBetween(100, 65000),
             'building_size' => fake()->numberBetween(40, 600),
             'region' => fake()->randomElement(['Sofia', 'Plovdiv', 'Varna']),
             'city' => fake()->randomElement(['Sofia', 'Plovdiv', 'Varna', null]),

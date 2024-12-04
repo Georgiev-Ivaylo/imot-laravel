@@ -2,17 +2,19 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Estate;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreEstateRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
+    // /**
+    //  * Determine if the user is authorized to make this request.
+    //  */
+    // public function authorize(User $user): bool
+    // {
+    //     return true;
+    // }
 
     /**
      * Get the validation rules that apply to the request.
@@ -21,8 +23,24 @@ class StoreEstateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $buildingDataRequirement = 'required_unless:type,' . Estate::TYPE_LAND . ',' . Estate::TYPE_REGULATED_LAND;
         return [
-            //
+            'price' => ['required', 'numeric'],
+            'currency_code' => ['required', 'in:BGN,EUR,USD'],
+            'region' => ['required', 'string'],
+            'city' => ['required', 'string'],
+            'village' => ['required', 'string'],
+            'district' => ['required_with:city', 'string'],
+            'type' => ['required', 'in:' . implode(',', Estate::AVAILABLE_CONSTRUCTION_TYPES)],
+            'construction_type' => [$buildingDataRequirement, 'in:' . implode(',', Estate::AVAILABLE_CONSTRUCTION_TYPES)],
+            'land_size' => ['required_unless:type,' . Estate::TYPE_APARTMENT, 'integer'],
+            'building_size' => [$buildingDataRequirement, 'integer'],
+            'rooms' => ['required_with:building_size', 'integer'],
+            'bathrooms' => ['required_with:building_size', 'integer'],
+            'floors' => ['required_with:building_size', 'integer'],
+            'floor_number' => ['required_if:type,' . Estate::TYPE_APARTMENT, 'integer'],
+            'description' => ['required', 'string'],
+            'construction_date' => ['required_with:building_size', 'date_format:Y-m-d'],
         ];
     }
 }

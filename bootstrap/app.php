@@ -7,6 +7,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Validation\ValidationException;
 use Laravel\Sanctum\Http\Middleware\CheckAbilities;
@@ -43,6 +44,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (Throwable $exception) {
+            Log::error($exception);
             $message = $exception->getMessage() ?: 'Internal Server Error';
             if ($exception instanceof ValidationException) {
                 return ApiResponse::error(Response::HTTP_UNPROCESSABLE_ENTITY, $message, $exception->errors());
@@ -54,7 +56,7 @@ return Application::configure(basePath: dirname(__DIR__))
             }
             if ($code === 0 && $exception instanceof AuthenticationException) {
                 return ApiResponse::error(419, 'Session has expired');
-            } else {
+            } else if ($code === 0) {
                 $code = 500;
             }
             // if ($exception instanceof UnauthorizedException || $exception instanceof AuthenticationException) {

@@ -13,8 +13,10 @@ Route::get('/', function (Request $request) {
     ]);
 });
 
-Route::post('/login/user', [AuthController::class, 'user']);
+// Route::post('/login/user', [AuthController::class, 'user']);
+Route::post('/admin/login', [AuthController::class, 'user']);
 Route::apiResource('estates', EstateController::class);
+Route::get('/admin/estates/form', [EstateController::class, 'form']);
 
 Route::prefix('admin')
     ->middleware(['auth:sanctum'])

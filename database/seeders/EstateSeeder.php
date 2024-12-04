@@ -12,6 +12,6 @@ class EstateSeeder extends Seeder
      */
     public function run(): void
     {
-        Estate::factory(50)->create();
+        Estate::factory(500)->create();
     }
 }

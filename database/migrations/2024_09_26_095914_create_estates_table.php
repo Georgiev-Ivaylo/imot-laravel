@@ -23,7 +23,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('bathrooms')->nullable();
             $table->unsignedTinyInteger('floors')->nullable();
             $table->unsignedTinyInteger('floor_number')->nullable();
-            $table->unsignedSmallInteger('land_size')->nullable();
+            $table->unsignedMediumInteger('land_size')->nullable();
             $table->unsignedSmallInteger('building_size')->nullable();
             $table->string('region');
             $table->string('city')->nullable();

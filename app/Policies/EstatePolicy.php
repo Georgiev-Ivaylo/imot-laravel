@@ -13,7 +13,7 @@ class EstatePolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -21,7 +21,7 @@ class EstatePolicy
      */
     public function view(User $user, Estate $estate): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -29,7 +29,7 @@ class EstatePolicy
      */
     public function create(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -37,6 +37,7 @@ class EstatePolicy
      */
     public function update(User $user, Estate $estate): bool
     {
+        dd($estate->user_id, $user->id);
         return $user->id === $estate->user_id;
     }
 
@@ -45,7 +46,7 @@ class EstatePolicy
      */
     public function delete(User $user, Estate $estate): bool
     {
-        return $user->id !== $estate->user_id;
+        return $user->id === $estate->user_id;
     }
 
     /**
@@ -53,7 +54,7 @@ class EstatePolicy
      */
     public function restore(User $user, Estate $estate): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -61,6 +62,6 @@ class EstatePolicy
      */
     public function forceDelete(User $user, Estate $estate): bool
     {
-        return $user->id !== $estate->user_id;
+        return $user->id === $estate->user_id;
     }
 }
